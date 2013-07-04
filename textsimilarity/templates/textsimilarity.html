@@ -1,0 +1,67 @@
+{% extends "silpa.html" %}
+{% block modulescript %}
+<script type="text/javascript">
+  $(document).ready(function(){
+  $("form").submit(function(event){
+  event.preventDefault();
+  similarity();
+  })
+  })
+  function similarity()
+  {
+var text1= $("#text1").val();
+var text2= $("#text2").val();
+  var jsonRequest = {
+  "method" :  "textsimilarity.compare",
+  "params" : [text1,text2],
+  "id" : ""
+  };
+
+
+  $.ajax({
+  type: "POST",
+  contentType: "application/json; charset=utf-8",
+  url: "JSONRPC",
+  data: JSON.stringify(jsonRequest),
+  dataType: "json",
+  beforeSend: function(){
+  $('#progress').html("Processing. Please Wait..").show();
+  $("#result").hide();
+  $("#error").hide();
+  },
+  success: function(msg) {
+  $('#progress') .hide();
+  $('#result').html("<b>"+ msg.result + "</b>").show();
+
+  },
+  error: function(msg) {
+  $("#progress").hide();
+  $("#error").show().html("Something went wrong...");
+
+  }
+  });
+  };
+
+</script>
+{% endblock %}
+{% block content %}
+<div class="well">
+  <h2>Text Similarity</h2>
+  <p>This module will compare two texts for their similarity. Based on the similarity it will give a number between 0 and 1. 1 means both text are similary. 0 means texts are completely
+    different. A value in between 0 and 1 indicates how much they are similar.
+  </p>
+  <p>The algorithm uses an n-grams model and <a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity.</a></p>
+  <form class="form "   >
+    <div class="row clearfix">
+      <div class="offset1 span5"><textarea class="span12" type="text" id="text1"></textarea></div>
+      <div class="offset1 span5"><textarea class="span12" type="text" id="text2"></textarea></div>
+    </div>
+    <input class="btn"  type="submit" id="Soundex" value="Compare"/>
+  </form>
+  <hr/>
+  <div class="alert alert-info hide " id="progress"></div>
+  <div class="alert hide " id="successmessage"></div>
+  <div class="alert-error alert hide " id="error"></div>
+  <div class=" hide alert alert-success " id="result"></div>
+</div>
+{% endblock %}
