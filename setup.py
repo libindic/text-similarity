@@ -6,8 +6,7 @@ name = "textsimilarity"
 
 setup(
     name=name,
-    version="0.2.1",
-    url="http://silpa.org.in/textsimilarity",
+    version="0.1",
     license="LGPL-3.0",
     description="Compare text and get a match score",
     author="Santhosh Thottingal",
