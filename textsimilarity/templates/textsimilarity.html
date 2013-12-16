@@ -1,49 +1,47 @@
 {% extends "silpa.html" %}
+
 {% block modulescript %}
 <script type="text/javascript">
   $(document).ready(function(){
-  $("form").submit(function(event){
-  event.preventDefault();
-  similarity();
-  })
-  })
-  function similarity()
-  {
-var text1= $("#text1").val();
-var text2= $("#text2").val();
-  var jsonRequest = {
-  "method" :  "textsimilarity.compare",
-  "params" : [text1,text2],
-  "id" : ""
-  };
+    $("form").submit(function(event){
+      event.preventDefault();
+      var idProgress = $('#progress'),
+        idResult = $('#result'),
+        idError = $('#error'),
+        jsonRequest = {
+          method: "textsimilarity.compare",
+          params: [
+              $("#text1").val(),
+              $("#text2").val()
+            ],
+          id: ""
+        };
 
-
-  $.ajax({
-  type: "POST",
-  contentType: "application/json; charset=utf-8",
-  url: "JSONRPC",
-  data: JSON.stringify(jsonRequest),
-  dataType: "json",
-  beforeSend: function(){
-  $('#progress').html("Processing. Please Wait..").show();
-  $("#result").hide();
-  $("#error").hide();
-  },
-  success: function(msg) {
-  $('#progress') .hide();
-  $('#result').html("<b>"+ msg.result + "</b>").show();
-
-  },
-  error: function(msg) {
-  $("#progress").hide();
-  $("#error").show().html("Something went wrong...");
-
-  }
+      $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: "JSONRPC",
+        data: JSON.stringify(jsonRequest),
+        dataType: "json",
+        beforeSend: function(){
+          idProgress.html("Processing. Please Wait..").show();
+          idResult.hide();
+          idError.hide();
+        },
+        success: function(msg) {
+          idProgress.hide();
+          idResult.html(msg.result).show();
+        },
+        error: function(msg) {
+          idProgress.hide();
+          idError.html("Something went wrong...").show();
+        }
+      });
+    });
   });
-  };
-
 </script>
 {% endblock %}
+
 {% block content %}
 <div class="well">
   <h2>Text Similarity</h2>
