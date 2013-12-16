@@ -8,58 +8,65 @@
       var idProgress = $('#progress'),
         idResult = $('#result'),
         idError = $('#error'),
+        text1 = $("#text1").val(),
+        text2 = $("#text2").val()
         jsonRequest = {
           method: "textsimilarity.compare",
-          params: [
-              $("#text1").val(),
-              $("#text2").val()
-            ],
+          params: [text1, text2],
           id: ""
         };
 
-      $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "JSONRPC",
-        data: JSON.stringify(jsonRequest),
-        dataType: "json",
-        beforeSend: function(){
-          idProgress.html("Processing. Please Wait..").show();
-          idResult.hide();
-          idError.hide();
-        },
-        success: function(msg) {
-          idProgress.hide();
-          idResult.html(msg.result).show();
-        },
-        error: function(msg) {
-          idProgress.hide();
-          idError.html("Something went wrong...").show();
-        }
-      });
+      if(text1 !== "" && text2 !== "") {
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: "JSONRPC",
+          data: JSON.stringify(jsonRequest),
+          dataType: "json",
+          beforeSend: function(){
+            idProgress.html("Processing. Please Wait..").show();
+            idResult.hide();
+            idError.hide();
+          },
+          success: function(msg) {
+            idProgress.hide();
+            idResult.html(msg.result).show();
+          },
+          error: function(msg) {
+            idProgress.hide();
+            idError.html("Something went wrong...").show();
+          }
+        });
+      } else {
+        idError.html("Enter text to find similarity").show();
+      }
     });
   });
 </script>
 {% endblock %}
 
 {% block content %}
-<div class="well">
-  <h2>Text Similarity</h2>
-  <p>This module will compare two texts for their similarity. Based on the similarity it will give a number between 0 and 1. 1 means both text are similary. 0 means texts are completely
-    different. A value in between 0 and 1 indicates how much they are similar.
-  </p>
-  <p>The algorithm uses an n-grams model and <a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity.</a></p>
-  <form class="form "   >
-    <div class="row clearfix">
-      <div class="offset1 span5"><textarea class="span12" type="text" id="text1"></textarea></div>
-      <div class="offset1 span5"><textarea class="span12" type="text" id="text2"></textarea></div>
-    </div>
-    <input class="btn"  type="submit" id="Soundex" value="Compare"/>
-  </form>
-  <hr/>
-  <div class="alert alert-info hide " id="progress"></div>
-  <div class="alert hide " id="successmessage"></div>
-  <div class="alert-error alert hide " id="error"></div>
-  <div class=" hide alert alert-success " id="result"></div>
+<div class="page-header">
+  <h1>Text Similarity</h1>
+</div>
+<p>This module will compare two texts for their similarity. Based on the similarity it will give a number between 0 and 1. 1 means both text are similary. 0 means texts are completely different. A value in between 0 and 1 indicates how much they are similar.
+</p>
+<p>The algorithm uses an n-grams model and <a href="http://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity.</a></p>
+
+<p>
+<form>
+  <div class="form-group">
+    <textarea class="form-control" type="text" id="text1"></textarea>
+  </div>
+  <div class="form-group">
+    <textarea class="form-control" type="text" id="text2"></textarea>
+  </div>
+  <input class="btn btn-default"  type="submit" id="Soundex" value="Compare"/>
+</form>
+</p>
+
+<div class="alert alert-info silpa-hide" id="progress"></div>
+<div class="alert alert-danger silpa-hide" id="error"></div>
+<div class="alert silpa-hide" id="result"></div>
 </div>
 {% endblock %}
