@@ -1,4 +1,4 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from core import getInstance, TextSimilarity
+from .core import getInstance, TextSimilarity
