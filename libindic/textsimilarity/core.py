@@ -40,7 +40,7 @@ with the same value of n.
 """
 import re
 import math
-from silpa_common import *
+from libindic.utils import *
 
 
 
@@ -132,7 +132,7 @@ class Ngrams(object):
             except KeyError: d[ngram] = 1
 
         norm = math.sqrt(sum(x**2 for x in d.values()))
-        for k, v in d.iteritems():
+        for k, v in d.items():
             d[k] = v/norm
         return d
 
